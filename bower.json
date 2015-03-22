@@ -1,0 +1,19 @@
+{
+  "name": "scope-instances",
+  "version": "0.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular-mocks": "~1.4"
+  },
+  "dependencies": {
+    "angular": "~1.4",
+    "angular-material": "latest",
+    "angular-route": "~1.4"
+  }
+}

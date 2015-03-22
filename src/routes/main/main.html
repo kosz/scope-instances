@@ -1,0 +1,20 @@
+<div layout="row" layout-sm="column" class="modular_content">
+  <md-whiteframe class="md-whiteframe-z1" ng-controller="ParentCtrl" flex>
+    <md-input-container flex ng-controller="ChildCtrl">
+      <label>Value</label>
+      <input ng-change="main.showSadMessage()" ng-model="value" type="text" placeholder="Enter a value">
+    </md-input-container>
+    <p style="text-align: center; text-weight: bold; font-size: 50px;">{{value}}<p>
+  </md-whiteframe>
+
+ </md-whiteframe>
+  <md-whiteframe class="md-whiteframe-z1" flex>
+  <h3>Explanation</h3>
+    <p style="font-size: 14px;">
+      The unexpected behaviour occurs because when the ChildCtrl is created it get's passed it's own scope, which is instantiated using the values from the $scope of the ParentCtrl.</p>
+    <img src="/assets/images/what_happens.png">
+    <p style="font-size: 14px;">This means that the ChildCtrl starts with it's $scope.value having the same value as the $scope.value of ParentCtrl, but since the $scope of ChildCtrl does not reference the same instance variable as the $scope of ParentCtrl, the two become out of sync when one changes. Since the ParentCtrl $scope.value is bound as printed text, while the ChildCtrl $scope.value is bound as a model for the input, when the ChildCtrl $scope.value input changes, the ParentCtrl $scope.value stays the same, therefore the user not being able to see his new entry reflected by the two way binding mechanism.  
+    </p>
+    <img src="/assets/images/what_we_think.png">
+ </md-whiteframe>
+</div>
