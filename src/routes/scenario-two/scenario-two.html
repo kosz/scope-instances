@@ -1,0 +1,38 @@
+<div layout="row" layout-sm="column" layout-md="column" class="modular_content">
+
+  <md-whiteframe class="md-whiteframe-z1" ng-controller="two.ParentCtrl" flex>
+    <md-input-container ng-controller="two.ChildCtrl" flex>
+      <label>Value</label>
+      <input ng-model="sharedValue.value" type="text" placeholder="Enter a value">
+    </md-input-container>
+    <p style="text-align: center; text-weight: bold; font-size: 50px;">
+      {{sharedValue.value | nonNumberQuotes}}
+      <span ng-if="sharedValue.value" ng-controller="two.InfoCtrl">{{sharedValue.value | valueInfo}}</span>
+    <p>
+  </md-whiteframe>
+
+ <md-whiteframe class="md-whiteframe-z1" flex>
+    <h3>2: Using Services for sharing functionality between Controllers</h3>
+    <p>
+      It's considered a good idea to separate concerns from the Controller, address them in a Service, then provide
+      that service to be used by more than one controllers, or even other services. <br/><br/>
+      <em>The current scenario, could be a candidate, once it's unusual requirement is investigated further. If it turns out that
+      the value needs to be shared with even other angular objects, the value can be stored in a service, which would then
+      be available for injection wherever it's required.</em> <br/><br/>
+
+    </p>
+      <md-tabs>
+        <md-tab md-active="vm.tabNavigation.activeTab === 1" md-on-select="vm.tabNavigation.changeTab(1)" label="Implementation">
+          <div ng-include="'routes/scenario-two/implementation.html'"></div>
+        </md-tab>
+        <md-tab md-active="vm.tabNavigation.activeTab === 2" md-on-select="vm.tabNavigation.changeTab(2)" label="TDD">
+          <div ng-include="'routes/scenario-two/test.html'"></div>
+        </md-tab>
+        <md-tab md-active="vm.tabNavigation.activeTab === 3" md-on-select="vm.tabNavigation.changeTab(3)" label="Refactor 1">
+          <div ng-include="'routes/scenario-two/refactor.html'"></div> 
+        </md-tab>
+        <md-tab md-active="vm.tabNavigation.activeTab === 4" md-on-select="vm.tabNavigation.changeTab(4)" label="Refactor 2"></md-tab>
+      </md-tabs>
+  </md-whiteframe>
+
+</div>

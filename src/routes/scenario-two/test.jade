@@ -1,0 +1,154 @@
+h3 Implementing the Service
+
+p.
+  The last service returned a primitive value, which would cause trouble due to the JavaScript behaviour detailed in the previous section. We want this new service to return an object with a primitive value as it's property instead.
+
+p(style="font-size: 12px;").
+  For the sake of avoiding reproducing the facial expressions in <a href="" ng-click="ngWatServiceFactory()">this</a> image, we won't discuss at this point why we call this factory a service, but for the sake of simplicity, we will be creating this service as a factory.
+
+p.
+  After TDD-ing, here's how the final version of the Service Spec looks like :
+
+pre.
+  describe('Service: two.SharedValue', function () {
+
+    var $rioSharedValue;
+
+    beforeEach(module('scope-instances'));
+    beforeEach(inject(['two.SharedValue',  function (_$rioSharedValue_) {
+      $rioSharedValue = _$rioSharedValue_;
+    }]));
+
+    it('should get initialized', function() {
+      expect($rioSharedValue).not.toEqual(undefined);
+    });
+
+    it('should expose a value attribute which defaults to 42', function () {
+      expect($rioSharedValue.value).not.toBeUndefined();
+      expect($rioSharedValue.value).toEqual(42);
+    });
+
+  });
+
+p.
+  And the final version of the Service, which passes the tests.
+
+pre.
+
+  angular.module('scope-instances')
+    .factory('two.SharedValue', function () {
+      return {
+        value: 42
+      };
+    });
+
+h3 Testing the service inside the Controllers
+
+p.
+  The specs are green, however that only means that we can move forward to the next step in the TDD process. 3 controllers need to be tested and make sure that when using this service, they can share the same instance of the value
+
+  After wiring up a new test to make sure the value in the service is the same as the value on the Controller scope, we are preemptively warned of trouble, with a test failure.
+
+pre.
+  expect($infoCtrlScope.value).toEqual($rioSharedValue.value);
+
+p.
+  fails with the error:
+
+pre.
+  Expected Object({ value: 42 }) to equal 42.
+
+p.
+  a quick look back at the controller code, we can see something looks wrong.
+
+pre.
+  angular.module('scope-instances')
+    .controller('two.ChildCtrl', [
+      '$scope',
+      'two.SharedValue',
+      function($scope, $rioSharedValue) {
+pre(style="color:red;").
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$scope.value = $rioSharedValue;
+pre.
+  &nbsp;&nbsp;}]);
+
+h3.
+  The Aha moment: Don't attach properties directly on the scope
+
+p.
+  The first tendency here would be to say 'ah I can just write $scope.value = $rioSharedValue.value' however that would just create the same JavaScript reference issue described in the previous section.
+p.
+  The right answer here, is to attach the Service Object onto the $scope, forcing the dot notation best practice, and ensuring that the reference to the value, can be shared amongst multiple Objects (controllers, etc).
+p.
+  Here is how the working test looks:
+
+pre.
+  expect($infoCtrlScope.sharedValue.value)
+    .toEqual($rioSharedValue.value);
+  expect($parentCtrlScope.sharedValue.value)
+    .toEqual($rioSharedValue.value);
+  expect($childCtrlScope.sharedValue.value)
+    .toEqual($rioSharedValue.value);
+
+  $rioSharedValue.value = 5;
+
+  expect($infoCtrlScope.sharedValue.value)
+    .toEqual(5);
+  expect($parentCtrlScope.sharedValue.value)
+    .toEqual(5);
+  expect($childCtrlScope.sharedValue.value)
+    .toEqual(5);
+
+  $infoCtrlScope.sharedValue.value = 3;
+
+  expect($rioSharedValue.value)
+    .toEqual(3);
+  expect($parentCtrlScope.sharedValue.value)
+    .toEqual(3);
+  expect($childCtrlScope.sharedValue.value)
+    .toEqual(3);
+
+
+p.
+  And the code that makes the tests pass:
+
+pre.
+  angular.module('myApp')
+    .factory('$valueService', function() {
+      return {
+        value: 42
+      };
+    })
+    .filter('valueInfo', function () {
+      // code
+    })
+    .controller('ParentCtrl', function($scope,$rioSharedValue) {
+      $scope.sharedValue = $rioSharedValue;
+    })
+    .controller('ChildCtrl', function($scope,$rioSharedValue) {
+      $scope.sharedValue = $rioSharedValue;
+    })
+    .controller('InfoCtrl', function($scope,$rioSharedValue) {
+      $scope.sharedValue = $rioSharedValue;
+    });
+
+p.
+  Finally the html needs to be updated so that the right scope properties are being bound.
+
+pre(ng-non-bindable).
+  &lt;div ng-app="myApp" ng-controller="ParentCtrl"&gt;
+    &lt;span ng-controller="ChildCtrl"&gt;
+      &lt;input ng-model="sharedValue.value" type="text" /&gt;
+    &lt;/span&gt;
+    {{sharedValue.value}}
+    &lt;span ng-controller="InfoCtrl"&gt;
+      {{sharedValue.value | valueInfo}}
+    &lt;/span&gt;
+  &lt;/div&gt;
+
+md-button(ng-click="vm.tabNavigation.changeTab(1)" style="position: relative; float: left;")
+  i.fa.fa-backward &nbsp;
+  | Implementation 
+md-button(ng-click="vm.tabNavigation.changeTab(3)" style="position: relative; float: right;")
+  | Refactor 1 &nbsp;
+  i.fa.fa-forward

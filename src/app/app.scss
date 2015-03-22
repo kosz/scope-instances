@@ -11,4 +11,21 @@
 }
 
 .modular_content md-whiteframe p, h1, h2, h3, h4 {
+  font-size: 15px;
+  font-weight: normal;
+}
+
+md-toolbar {
+  .md-button:first-child {
+    font-size: 25px;
+    line-height: 40px;
+    margin-right: 100px;
+  }
+  .md-accent {
+    margin-top: 50px;
+  }
+  .md-button {
+    margin-right: 7px;
+    line-height: 45px;
+  }
 }

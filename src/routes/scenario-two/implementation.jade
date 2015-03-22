@@ -1,0 +1,130 @@
+h3.
+  The Code: First Try
+p.
+  In this scenario we want to have a third controller using the value, which will apply a filter, to display information about the value.
+
+img(style="width: 100%;" src="/assets/images/value-service.png")
+
+p.
+  This code is expected to achieve the described behaviour:
+
+pre(ng-non-bindable).
+  &lt;div ng-app="myApp" ng-controller="ParentCtrl"&gt;
+    &lt;span ng-controller="ChildCtrl"&gt;
+      &lt;input ng-model="value" type="text" /&gt;
+    &lt;/span&gt;
+    {{value}}
+    &lt;span ng-controller="InfoCtrl"&gt;
+      {{value | valueInfo}}
+    &lt;/span&gt;
+  &lt;/div&gt;
+
+pre.
+  angular.module('myApp')
+    .factory('$valueService', function() {
+      return 42;
+    })
+    .filter('valueInfo', function () {
+      // code
+    })
+    .controller('ParentCtrl', function($scope,$valueService) {
+      $scope.value = $valueService;
+    })
+    .controller('ChildCtrl', function($scope,$valueService) {
+      $scope.value = $valueService;
+    })
+    .controller('InfoCtrl', function($scope,$valueService) {
+      $scope.value = $valueService;
+    });
+
+p.
+  However after running it, we see that things are not working as expected. In fact, we are getting the same broken behaviour, changing the input does not change the other printed values.
+
+p.
+  With this we have uncovered a slightly different caveat in JavaScript, which enforces the fact that <em>it's a bad idea to reference parameters directly from the $scope, which has been the anti pattern causing the confusion from the start.</em>
+
+h3.
+  Tangent: Pointers in JavaScript
+p.
+  This caveat has to do with how JavaScript handles pointers. Officially there are no pointers in JavaScript, but in reality, JavaScript passes everything by reference, except for primitive values. Primitive values instead create new pointers overwriting the old pointers referenced in the variable.
+
+p.
+  That means that
+
+h3.
+  Pointing to Primitives
+
+pre.
+  var a = 1;
+  var b = a;
+
+img(src="/assets/images/primitive-example-1.png")
+
+pre.
+  console.log('a is now ', a); // prints {{vm.primitiveExample.a1}}
+  console.log('b is now ', b); // prints {{vm.primitiveExample.b1}}
+
+  a = 2; // makes 'a' point to a newly created reference
+         // which is different from the reference b was initiated with
+img(src="/assets/images/primitive-example-2.png")
+
+pre.
+  console.log('a is now ', a); // prints {{vm.primitiveExample.a2}}
+  console.log('b is now ', b); // prints {{vm.primitiveExample.b2}}
+
+h3.
+  Pointing to Objects
+
+p.
+  However, if the referenced object is just modified internally, rather than being assigned a new primitive value pointer, then the reference isn't overridden, but instead the memory object that it points to is updated. This then is obviously visible from wihin any other variable pointing to the same memory object. Of course a primitive like a number is impossible to be modified internally, but an object like an Array, can be updated. We can test this like so :
+
+pre.
+  var arr = [ 1, 2 ];
+  var bar = arr;
+
+  console.log('arr is now ', arr); // prints {{}}
+  console.log('bar is now ', bar); // prints {{}}
+
+  arr.push(3);
+
+  console.log('arr is now ', arr); // prints {{}}
+  console.log('bar is now ', bar); // prints {{}}
+
+p.
+  We can at this point modify the referenced object from both variables.
+
+pre.
+  bar.push(4);
+
+  console.log('arr is now ', arr); // prints {{}}
+  console.log('bar is now ', bar); // prints {{}}
+
+p.
+  So that happens because we are modifying the object referenced, not creating a new object to overwrite the shared reference. We could create a new array, instead of modifying it, and this will once again, make the second variable lose it's reference sync wih the first variable.
+
+img(src="/assets/images/object-example-1.png")
+
+h3.
+  Using object properties to share primitive references
+
+p.
+  There are no pointers in JavaScript, and this creates a wavy learning curve, where things feel simple, then get confusing for more complicated requirements. In this case, it's confusing to understand how two objects ( in our previous example, two controllers ) can share and update the same reference of a primitive value ( stored in a service ).
+
+p.
+  The way to achieve this in JavaScript is keeping the reference to the primitive value, as an object's property, then sharing the reference to that object. This way when the primitive gets a new reference, to a new memory object, through being passed a new value, the references do not fall out of sync, as the parent object changes it's state in memory, by pointing one of it's properties towards a new memory object, change which is then visible, from the variables referencing the parent object.
+img(src="/assets/images/object-example-2.png")
+pre.
+  var x = { active: true };
+  var y = x;
+
+  y.active = false;
+  console.log('x.active is ', x.active); // prints {{}}
+  console.log('y.active is ', y.active); // prints {{}}
+
+p.
+  So now it should be clear, why the first attempt at implementing a shared value service failed. A second thing to learn from this experience, is that the code should have been tested, to detect the problematic behaviour, even earlier, preventing the requirement for a larger refactor.
+  The second attempt at implementing this behaviour will be TDD'd.
+
+md-button(ng-click="vm.tabNavigation.changeTab(2)" style="position: relative; float: right;")
+  | TDD &nbsp;
+  i.fa.fa-forward
