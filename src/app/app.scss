@@ -29,3 +29,12 @@ md-toolbar {
     line-height: 45px;
   }
 }
+
+a {
+  text-decoration: none;
+  color: rgb(21,126,244);
+}
+
+a:hover {
+  text-decoration: underline;
+}

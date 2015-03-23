@@ -3,7 +3,9 @@
  <md-whiteframe class="md-whiteframe-z1" flex>
     <h3>3: Using the $parent scope</h3>
     <p>Services arn't always ideal. For example if our multiple controllers, live inside a ng-repeat, we will turn to our isolated scope for data storage and object sharing.</p> 
-    <p>The following implementation using $parent and $scope, is the most immature version of a isolated scope based solution.</p>
+    <p>One way to do that is by leveraging the $scope.$parent property, which gets passed to the controller during instantiation, and it references the scope of it's direct parent, in this case, the parent controller $scope.</p>
+    <img src="assets/images/scope-creation.png" />
+    <p>Two implementations come to mind here. One involves modifying <b>only the View</b> by binding $parent.value as the ng-model of the ChildCtrl input:</p>
     <pre ng-non-bindable>
   &lt;div ng-app="myApp" ng-controller="ParentCtrl"&gt;
     &lt;span ng-controller="ChildCtrl"&gt;
@@ -12,12 +14,21 @@
     {{value}}
   &lt;/div&gt;
     </pre>
+    <p>The other requires <b>only the JavaScript</b> to be modified, and setting the reference on ChildCtrl $scope.value to it's $scope.$parent.value</p>
+    <pre>
+  .controller('ChildCtrl', [
+   '$scope',
+    function ($scope) {
+      $scope.value = $scope.$parent.value;
+    }]);
+    </pre>      
+    <p>While this solution is the least intrustive to the initial code, I feel is not necessarily the most ideal, since the view code can still look confusing, due to accessing properties directly from the $scope, from multiple $scopes and multiple controllers, maintaining an anti pattern that could have a negative impact later on down the road.</p>
  </md-whiteframe>
 
   <md-whiteframe class="md-whiteframe-z1" ng-controller="three.ParentCtrl" flex>
     <md-input-container ng-controller="three.ChildCtrl" flex>
       <label>Value</label>
-      <input ng-model="$parent.value" type="text" placeholder="Enter a value">
+      <input ng-model="value" type="text" placeholder="Enter a value">
       <p style="text-align: center; text-weight: bold; font-size: 50px;">
         {{value}}
       </p>

@@ -11,6 +11,6 @@
   };
 
   angular.module('scope-instances')
-    .service('two.TabNavigation', TabNavigation);
+    .service('$tabNavigation', TabNavigation);
 
 })();

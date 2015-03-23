@@ -1,25 +1,24 @@
-<md-toolbar class="md-warn">
+<md-toolbar class="md-primary">
+
   <h2 class="md-toolbar-tools">
-    <md-button ng-class="{ 'md-accent': isActive('/'), 'md-primary': !isActive('/') }"
-               href="/"
-               class="md-fab"><i class="fa fa-home"></i></md-button>
-    <md-button ng-class="{ 'md-accent': isActive('/scenario-one'), 'md-primary': !isActive('/scenario-one') }"
+    <md-button ng-class="{ 'md-accent': isActive('/'), 'md-warn': !isActive('/') }"
+               href="/" 
+               class="md-fab"><md-tooltip>Issue</md-tooltip><i class="fa fa-home"></i></md-button>
+
+    <md-button ng-class="{ 'md-accent': isActive('/scenario-one'), 'md-warn': !isActive('/scenario-one') }"
                href="/scenario-one"
-               class="md-fab"><i>I</i></md-button>
-    <md-button ng-class="{ 'md-accent': isActive('/scenario-two'), 'md-primary': !isActive('/scenario-two') }"
+               class="md-fab"><md-tooltip>Simplicity</md-tooltip><i>I</i></md-button>
+    <md-button ng-class="{ 'md-accent': isActive('/scenario-two'), 'md-warn': !isActive('/scenario-two') }"
                href="/scenario-two"
-               class="md-fab"><i>II</i></md-button>
-    <md-button ng-class="{ 'md-accent': isActive('/scenario-three'), 'md-primary': !isActive('/scenario-three') }"
+               class="md-fab"><md-tooltip>Services</md-tooltip><i>II</i></md-button>
+    <md-button ng-class="{ 'md-accent': isActive('/scenario-three'), 'md-warn': !isActive('/scenario-three') }"
                href="/scenario-three"
-               class="md-fab"><i>III</i></md-button>
-    <md-button ng-class="{ 'md-accent': isActive('/scenario-four'), 'md-primary': !isActive('/scenario-four') }"
+               class="md-fab"><md-tooltip>$parent</md-tooltip><i>III</i></md-button>
+    <md-button ng-class="{ 'md-accent': isActive('/scenario-four'), 'md-warn': !isActive('/scenario-four') }"
                href="/scenario-four"
-               class="md-fab"><i>IV</i></md-button>
-    <md-button ng-class="{ 'md-accent': isActive('/scenario-five'), 'md-primary': !isActive('/scenario-five') }"
+               class="md-fab"><md-tooltip>controllerAs</md-tooltip><i>IV</i></md-button>
+    <md-button ng-class="{ 'md-accent': isActive('/scenario-five'), 'md-warn': !isActive('/scenario-five') }"
                href="/scenario-five"
-               class="md-fab"><i>V</i></md-button>
-
-
-
+               class="md-fab"><md-tooltip>Directives</md-tooltip><i>V</i></md-button>
   </h2>
 </md-toolbar>

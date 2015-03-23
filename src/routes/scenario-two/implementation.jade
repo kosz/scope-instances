@@ -1,7 +1,7 @@
 h3.
   The Code: First Try
 p.
-  In this scenario we want to have a third controller using the value, which will apply a filter, to display information about the value.
+  In this scenario we want to have a third controller using the value, which will apply a filter, to display information about the value. A service can be written then injected into all the controllers, to provide shared access to the value parameter.
 
 img(style="width: 100%;" src="/assets/images/value-service.png")
 
@@ -82,13 +82,13 @@ pre.
   var arr = [ 1, 2 ];
   var bar = arr;
 
-  console.log('arr is now ', arr); // prints {{}}
-  console.log('bar is now ', bar); // prints {{}}
+  console.log('arr is now ', arr); // prints {{vm.arrayExample.arr}}
+  console.log('bar is now ', bar); // prints {{vm.arrayExample.bar}}
 
   arr.push(3);
 
-  console.log('arr is now ', arr); // prints {{}}
-  console.log('bar is now ', bar); // prints {{}}
+  console.log('arr is now ', arr); // prints {{vm.arrayExample.arr2}}
+  console.log('bar is now ', bar); // prints {{vm.arrayExample.bar2}}
 
 p.
   We can at this point modify the referenced object from both variables.
@@ -96,8 +96,8 @@ p.
 pre.
   bar.push(4);
 
-  console.log('arr is now ', arr); // prints {{}}
-  console.log('bar is now ', bar); // prints {{}}
+  console.log('arr is now ', arr); // prints {{vm.arrayExample.arr3}}
+  console.log('bar is now ', bar); // prints {{vm.arrayExample.bar3}}
 
 p.
   So that happens because we are modifying the object referenced, not creating a new object to overwrite the shared reference. We could create a new array, instead of modifying it, and this will once again, make the second variable lose it's reference sync wih the first variable.
@@ -118,8 +118,8 @@ pre.
   var y = x;
 
   y.active = false;
-  console.log('x.active is ', x.active); // prints {{}}
-  console.log('y.active is ', y.active); // prints {{}}
+  console.log('x.active is ', x.active); // prints {{vm.objectExample.x.active}}
+  console.log('y.active is ', y.active); // prints {{vm.objectExample.y.active}}
 
 p.
   So now it should be clear, why the first attempt at implementing a shared value service failed. A second thing to learn from this experience, is that the code should have been tested, to detect the problematic behaviour, even earlier, preventing the requirement for a larger refactor.

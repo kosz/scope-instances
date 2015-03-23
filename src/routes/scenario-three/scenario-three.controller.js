@@ -11,4 +11,5 @@ angular.module('scope-instances')
   .controller('three.ChildCtrl', [
    '$scope',
     function ($scope) {
+      $scope.value = $scope.$parent.value;
     }]);

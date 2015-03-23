@@ -29,6 +29,11 @@ angular.module('scope-instances', [ 'ngMaterial',
     $locationProvider.html5Mode(true);
 
 }])
+.config(['$mdThemingProvider', function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+  .warnPalette('blue')
+  .accentPalette('pink');
+}])
 /**
  * @ngdoc overview
  * @name $rootScope

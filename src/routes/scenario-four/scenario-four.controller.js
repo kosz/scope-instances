@@ -1,6 +1,12 @@
+angular.module('scope-instances')
+  .controller('scenario-four', [
+    '$tabNavigation',
+    '$values',
+    function ($tabNavigation,$values) {
 
-angular.module('scope-instances').controller('scenario-four', [
-function () {
-  var self = this;
+      var self = this;
 
-}]);
+      self.tabNavigation = $tabNavigation;
+      angular.extend(self,$values);
+
+  }]);

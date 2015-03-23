@@ -4,4 +4,5 @@ angular.module('scope-instances')
     'two.SharedValue',
     function($scope, $rioSharedValue) {
       $scope.sharedValue = $rioSharedValue;
+      $scope.value = 42;
     }]);

@@ -1,17 +1,26 @@
 angular.module('scope-instances').controller('scenario-two', [
   '$scope',
   'two.PrimitiveExample',
-  'two.TabNavigation',
+  'two.ArrayExample',
+  'two.ObjectExample',
+  '$tabNavigation',
   '$mdDialog',
-  function ($scope,$rioPrimitiveExample,$rioTabNavigation,$mdDialog) {
+  function ($scope,
+            $rioPrimitiveExample,
+            $rioArrayExample,
+            $rioObjectExample,
+            $tabNavigation,
+            $mdDialog) {
 
     var self = this;
 
     self.primitiveExample = $rioPrimitiveExample;
-    self.tabNavigation = $rioTabNavigation;
+    self.arrayExample = $rioArrayExample;
+    self.objectExample = $rioObjectExample;
+    self.tabNavigation = $tabNavigation;
 
     $scope.ngWatServiceFactory = function ($event) {
-    
+
       $mdDialog.show({
           targetEvent: $event,
           template:
@@ -30,5 +39,5 @@ angular.module('scope-instances').controller('scenario-two', [
           },
           locals: { employee: $scope.userName }
         });
-    }; 
+    };
   }]);

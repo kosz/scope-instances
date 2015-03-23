@@ -1,0 +1,56 @@
+div.modular_content(layout="row" layout-sm="column" layout-md="column")
+  md-whiteframe.md-whiteframe-z1(flex)
+    h3 5: Using a Directive
+    p.
+      Sometimes declaring controllers inside the angular partial may create confusion. A good alternative at times is to use directives ( or routes ), to extend the functionality of your view.
+    p.
+      The directive code would look something like this :
+    pre.
+      angular.module('myApp')
+        .directive('rioChild', [
+          function () {
+
+            return {
+              template: '&lt;span&gt;&lt;input ' +
+                        'ng-model="value" type="text" /&gt;&lt;/span&gt;',
+              scope: {
+                value: '=value'
+              },
+              restrict: 'E',
+              replace: true
+            };
+
+          }]);
+    p.
+      The <em>scope: { value: '=value'  }</em> config indicates that a value parameter will be passed to the directive during creation, and this parameter should keep a reference to it's original source, so that changes can be reflected in both places. Note that this also creates an isolated scope, so other properties from the parent will not be copied over. An alternative to this would be passign in <em>scope: false</em> which would prevent a creation of a scope, and our code would still work, but it would provide the directive template with a magical variable, that may break it's modularity while creating coupling with a parent $scope.
+
+    pre(ng-non-bindable).
+      &lt;div ng-app="myApp" ng-controller="ParentCtrl"&gt;
+        &lt;rio-child value="value"&gt;&lt;/rio-child&gt;
+        {{value}}
+      &lt;/div&gt;
+
+    h3 Conclusion
+
+    p.
+      This alternative also is interesting, and it helps encapsulate functionality, improving modularity while keeping the views cleaner, however in this implementation we've introduced the 'no dot on scope' anti pattern again.
+    p.
+      Finding the best solution is somewhat dependant on an entire team, and the patterns they chose to adopt. These scenarios however provide some insight into the matter, so that the best option can be chosen.
+
+  md-whiteframe.md-whiteframe-z1(layout="column" flex)
+
+    div(layout="row" flex
+        style="max-height: 90px;"
+        ng-init="value = valueObject.value"
+        ng-controller="five.ParentCtrl"
+        ng-repeat="valueObject in vm.values")
+      div(flex)
+        md-input-container
+          label Value
+          rio-child(value="value")
+      p(flex="30" style="font-size: 22px; padding-bottom: 10px; text-align: center;")
+        | {{value}}
+
+
+    md-button(ng-click="vm.addValue()" style="display: inline-block; float: right;")
+      i.fa.fa-plus

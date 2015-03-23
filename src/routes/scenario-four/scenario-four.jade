@@ -1,0 +1,157 @@
+div.modular_content(layout="row" layout-sm="column" layout-md="column")
+  md-whiteframe.md-whiteframe-z1(flex)
+    h3 4: The ControllerAs Pattern
+    p.
+      The code can be refactored to use the <a target="_blank" href="https://google-styleguide.googlecode.com/svn/trunk/angularjs-google-style.html#controllers">controller as</a> pattern, in order to provide clarity in the View code as to which object is being referenced, as well as other benefits such as allowing the code to feel more object oriented, by working with a single object, which can be passed around and extended/inherited easier, and with ES6 or TypeScript, be written as a true class.
+    p.
+      The pre angular 1.2 example given in <a target="_blank" href="https://google-styleguide.googlecode.com/svn/trunk/angularjs-google-style.html#controllers">the google document </a> gives a good hint at how controllerAs works. Basically a reference of the controller object is added onto the $scope, then all properties and methods are attached to the controller object instead of directly on the $scope.
+    img(src="assets/images/controller-object-on-scope.png")
+    p.
+      Google seems to provide examples using descriptive controllerAs names which are unique and based on the original Controller provider name. However since this document, a couple of well respected writings have emerged, suggesting the use of a standard word like 'vm' or 'ctl' for your controllerAs name. The code will be implemented resembling the google examples, since using vm or ctl feels like it defeats the purpose of controllerAs when it comes to improving code readability.
+
+
+    md-tabs
+      md-tab(md-active="vm.tabNavigation.activeTab === 1" md-on-select="vm.tabNavigation.changeTab(1)" label="ParentCtrl")
+        p parent.controller.spec.js
+        pre.
+          
+          describe('Controller: four.ParentCtrl', function() {
+            var parentController, $rootScope, $scope, $controller;
+          
+            beforeEach(module('scope-instances'));
+            beforeEach(inject(function (_$controller_,_$rootScope_) {
+          
+              $controller = _$controller_;
+              $rootScope = _$rootScope_;
+              $scope = $rootScope.$new();
+          
+              parentController = $controller('four.ParentCtrl', {
+                '$scope': $scope
+              });
+            }));
+          
+            it('should get initialized', function() {
+              expect(parentController).not.toEqual(undefined);
+            });
+          
+            it('should expose a property called value which defaults to 42', function() {
+              expect(parentController.value).toEqual(42);
+            });
+          
+            it('should have it`s own unique value, not shared with other of it`s instances', function() {
+              
+              var $anotherScope = $rootScope.$new(),
+                  anotherParentController = $controller('four.ParentCtrl', {
+                    '$scope': $anotherScope
+                  });
+            
+              expect(parentController.value).toEqual(42);
+              expect(anotherParentController.value).toEqual(42);
+          
+              parentController.value = 15;
+              anotherParentController.value = 20;
+          
+              expect(parentController.value).toEqual(15);
+              expect(anotherParentController.value).toEqual(20);
+              
+            });
+          
+          });
+
+        p parent.controller.js
+        pre.
+          angular.module('scope-instances')
+            .controller('four.ParentCtrl', [
+              '$scope',
+              function ($scope) {
+          
+                var self = this;
+                self.value = 42;
+          
+             }]);
+
+      md-tab(md-active="vm.tabNavigation.activeTab === 2" md-on-select="vm.tabNavigation.changeTab(2)" label="ChildCtrl")
+        p child.controller.spec.js
+        pre.
+          describe('Controller: child', function() {
+            var childController, $rootScope;
+            var $scope;
+          
+            beforeEach(module('scope-instances'));
+            beforeEach(inject(function (_$controller_,_$rootScope_) {
+          
+              var $controller = _$controller_;
+              $rootScope = _$rootScope_;
+          
+              $rootScope.parentCtrl = { value: 42 };
+              $scope = $rootScope.$new();
+          
+              childController = $controller('four.ChildCtrl', {
+                '$scope': $scope
+              });
+          
+            }));
+          
+            it('should get initialized', function() {
+              expect(childController).not.toEqual(undefined);
+            });
+          
+            it('should inherit the scope from it`s parent ', function() {
+              childController.parentCtrl = $scope.parentCtrl;
+              expect($scope.parentCtrl.value).toEqual(42);
+              expect(childController.parentCtrl.value).toEqual(42);
+            });
+          
+            it('should be able modify the scope on it`s parent', function() {
+              childController.parentCtrl.value = 15;
+          
+              expect($rootScope.parentCtrl.value).toEqual(15);
+              expect($scope.parentCtrl.value).toEqual(15);
+            });
+          
+          });
+
+        p child.controller.js
+        pre.
+
+          angular.module('scope-instances').controller(
+            'four.ChildCtrl', [
+              '$scope',
+              function ($scope) {
+          
+                var self = this;
+                self.parentCtrl = $scope.parentCtrl;  
+          
+              }]);
+
+      md-tab(md-active="vm.tabNavigation.activeTab === 3" md-on-select="vm.tabNavigation.changeTab(3)" label="HTML")
+        pre(ng-non-bindable).
+          &lt;div ng-app="myApp" ng-controller="ParentCtrl as parentCtrl"&gt;
+            &lt;span ng-controller="ChildCtrl as childCtrl"&gt;
+              &lt;input ng-model="parentCtrl.value" type="text" /&gt;
+            &lt;/span&gt;
+            {{value}}
+          &lt;/div&gt;
+
+        p.
+          Since we played around with wiring a lot we have additional options to writing the input model binding, that yield the same result.
+        pre &lt;input ng-model="parentCtrl.value" type="text" /&gt;
+        pre &lt;input ng-model="childCtrl.parentCtrl.value" type="text" /&gt;
+
+
+  md-whiteframe.md-whiteframe-z1(layout="column" flex)
+    div(layout="row" flex
+        style="max-height: 90px;"
+        ng-init="parentCtrl.value = value.value"
+        ng-controller="four.ParentCtrl as parentCtrl"
+        ng-repeat="value in vm.values")
+      div(flex)
+        md-input-container(ng-controller="four.ChildCtrl as childCtrl")
+          label Value
+          input(ng-model="childCtrl.parentCtrl.value" type="text" placeholder="Enter a value")
+      p(flex="30" style="font-size: 22px; padding-bottom: 10px; text-align: center;")
+        | {{parentCtrl.value}}
+
+
+    md-button(ng-click="vm.addValue()" style="display: inline-block; float: right;")
+      i.fa.fa-plus
