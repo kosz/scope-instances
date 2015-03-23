@@ -1,0 +1,11 @@
+h3.
+  Understanding Limitations of Services
+
+p.
+  We have a decent, final solution for separating concerns out of a controller into a service, however due to the nature of services, we must be careful and understand future limitations when using them. The one detail about services, regardless of their flavor, is that they are singletons.
+
+p.
+  <i>That means that only one instance of that service will be injected into your angular objects</i>. And actually this makes sense, because this is what enables two way binding of data from within a service, from inside multiple controllers.
+
+p.
+  This feature therefore makes things difficult if multiple instances of a controller need to store and share different instances of service data therefore making the services solution much less viable for such a scenario.

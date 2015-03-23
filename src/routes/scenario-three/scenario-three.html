@@ -1,6 +1,27 @@
-<div layout="row" layout-sm="column" class="modular_content">
-  <md-whiteframe
-    class="md-whiteframe-z1" flex>
-    <p>Automatically Generated for: scenario-three.</p>
+<div layout="row" layout-sm="column" layout-md="column" class="modular_content">
+
+ <md-whiteframe class="md-whiteframe-z1" flex>
+    <h3>3: Using the $parent scope</h3>
+    <p>Services arn't always ideal. For example if our multiple controllers, live inside a ng-repeat, we will turn to our isolated scope for data storage and object sharing.</p> 
+    <p>The following implementation using $parent and $scope, is the most immature version of a isolated scope based solution.</p>
+    <pre ng-non-bindable>
+  &lt;div ng-app="myApp" ng-controller="ParentCtrl"&gt;
+    &lt;span ng-controller="ChildCtrl"&gt;
+      &lt;input ng-model="$parent.value" type="text" /&gt;
+    &lt;/span&gt;
+    {{value}}
+  &lt;/div&gt;
+    </pre>
+ </md-whiteframe>
+
+  <md-whiteframe class="md-whiteframe-z1" ng-controller="three.ParentCtrl" flex>
+    <md-input-container ng-controller="three.ChildCtrl" flex>
+      <label>Value</label>
+      <input ng-model="$parent.value" type="text" placeholder="Enter a value">
+      <p style="text-align: center; text-weight: bold; font-size: 50px;">
+        {{value}}
+      </p>
+    </md-input-container>
   </md-whiteframe>
+
 </div>
