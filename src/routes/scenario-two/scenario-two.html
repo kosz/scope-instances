@@ -22,16 +22,15 @@
 
     </p>
       <md-tabs>
-        <md-tab md-active="vm.tabNavigation.activeTab === 1" md-on-select="vm.tabNavigation.changeTab(1)" label="Implementation">
+        <md-tab md-active="vm.tabNavigation.activeTab === 1" md-on-select="vm.tabNavigation.changeTab(1)" label="Planning">
           <div ng-include="'routes/scenario-two/implementation.html'"></div>
         </md-tab>
         <md-tab md-active="vm.tabNavigation.activeTab === 2" md-on-select="vm.tabNavigation.changeTab(2)" label="TDD">
           <div ng-include="'routes/scenario-two/test.html'"></div>
         </md-tab>
-        <md-tab md-active="vm.tabNavigation.activeTab === 3" md-on-select="vm.tabNavigation.changeTab(3)" label="Refactor 1">
-          <div ng-include="'routes/scenario-two/refactor.html'"></div> 
+        <md-tab md-active="vm.tabNavigation.activeTab === 3" md-on-select="vm.tabNavigation.changeTab(3)" label="Refactor">
+          <div ng-include="'routes/scenario-two/refactor.html'"></div>
         </md-tab>
-        <md-tab md-active="vm.tabNavigation.activeTab === 4" md-on-select="vm.tabNavigation.changeTab(4)" label="Refactor 2"></md-tab>
       </md-tabs>
   </md-whiteframe>
 

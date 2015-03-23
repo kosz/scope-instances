@@ -1,1 +1,27 @@
-p test test
+h3 Refactoring
+
+p.
+  The next natural step after having the working code with tests in place, is seeing if we can improve the code in any way. Having tests in place gives us the confidence to be a lot more agressive in the way we change code, and now it's a perfect time to have a critical look and see if the code can be further improved before it gets sent as a pull request in order to avoid any unecessary friction.
+
+p.
+  The 2 most obvious areas of improvement in the current code would be:
+
+p.
+  - the way we declare the factory ... service ... sometimes it's hard to chose, many times it's irrelevant, but we'll try to be as accurate as possible and use a <b>angular.value</b> instead
+p.
+  - the fact that our code has no comments ( which may or may not be relevant depending on which XP principles chooses to adopt ).
+
+p.
+  Things look promissing after addressing those 2 issues. JSHint is quiet. Specs are green. gulp is not throwing errors. 
+
+img(src="/assets/images/dev-dashboard.png" style="width: 100%")
+
+p.
+  And gulp serve:ngdocs renders properly. 
+
+img(src="/assets/images/ngdocs.png" style="width: 100%")
+
+md-button(ng-click="vm.tabNavigation.changeTab(2)" style="position: relative; float: left;")
+  i.fa.fa-backward &nbsp;
+  | TDD 
+

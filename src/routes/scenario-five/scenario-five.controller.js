@@ -1,8 +1,6 @@
- 
-angular.module('scope-instances').controller('scenario-five', [ 
+
+angular.module('scope-instances').controller('scenario-five', [
 function () {
   var self = this;
-
-  console.log('Started controller scenario-five'); 
 
 }]);
