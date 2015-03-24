@@ -36,8 +36,7 @@ angular.module('scope-instances').controller('scenario-two', [
             $scope.closeDialog = function () {
               $mdDialog.hide();
             };
-          },
-          locals: { employee: $scope.userName }
+          }
         });
     };
   }]);

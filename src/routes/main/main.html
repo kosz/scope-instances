@@ -10,10 +10,11 @@
  </md-whiteframe>
   <md-whiteframe class="md-whiteframe-z1" flex>
   <h3>Explanation</h3>
+    <a href="https://github.com/kosz/scope-instances/tree/master/src/routes/main" target="_blank">code on github</a>
     <p style="font-size: 14px;">
       When the ChildCtrl is instantiated it get's passed it's own scope, which is instantiated using the values from the $scope of the ParentCtrl. However since the 'value' property contains a primitive value, this value is passed a new reference with the same value, making it look like the same reference, but in fact, breaking the two way binding.</p>
     <img src="/assets/images/what_happens.png">
-    <p style="font-size: 14px;">This means that the ChildCtrl starts with it's $scope.value having the same value as the $scope.value of ParentCtrl, but since the $scope of ChildCtrl does not reference the same instance variable as the $scope of ParentCtrl, the two become out of sync when one changes. Since the ParentCtrl $scope.value is bound as printed text, while the ChildCtrl $scope.value is bound as a model for the input, when the ChildCtrl $scope.value input changes, the ParentCtrl $scope.value stays the same, therefore the user not being able to see his new entry reflected by the two way binding mechanism.  
+    <p style="font-size: 14px;">This means that the ChildCtrl starts with it's $scope.value having the same value as the $scope.value of ParentCtrl, but since the $scope of ChildCtrl does not reference the same instance variable as the $scope of ParentCtrl, the two become out of sync when one changes. Since the ParentCtrl $scope.value is bound as printed text, while the ChildCtrl $scope.value is bound as a model for the input, when the ChildCtrl $scope.value input changes, the ParentCtrl $scope.value stays the same, therefore the user not being able to see his new entry reflected by the two way binding mechanism.
     </p>
     <img src="/assets/images/what_we_think.png">
     <p style="font-size: 14px;">Attaching properties directly on the $scope is an anti pattern. The quick and dirty fix, would be to bind to a '$scope.valueHoldingObject.value' forcing a dot in the $scope, however before making a hasty decision, I would like to explore a few scenarios in an attempt to find the best solution for the given circumstance.</p>
